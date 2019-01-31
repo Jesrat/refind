@@ -1,0 +1,59 @@
+#! /usr/bin/python
+
+import os
+import re
+import sys
+
+
+def main():
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~VARS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    try:
+        #TXT_FILE = os.path.dirname(__file__)+"/"+sys.argv[2]
+        TXT_FILE = os.getcwd()+"/"+sys.argv[2]
+    except:
+        print('aparentemente no has ingresado el archivo bye ;)')
+        return
+
+    vDup = bool()
+    if len(sys.argv)>3:
+        if sys.argv[3] == 'removedup':
+            vDup = True
+                    
+    vJump = bool()
+    if len(sys.argv)>4:
+        vJump = True
+
+    vFinallyList = []
+
+    if sys.argv[1]=='imsi':
+        vPattern = re.compile('7[0-9]{14}')
+    elif sys.argv[1]=='msisdn':
+        vPattern = re.compile('[7|6][0-9]{7}')
+    else:
+        # this is the one  %%.+?END
+        vPattern = re.compile(sys.argv[1], re.DOTALL | re.MULTILINE)
+
+    if not os.path.isfile(TXT_FILE):
+        print('Man no has ingresado un archivo valido! '+TXT_FILE)
+        return
+    
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    with open(TXT_FILE, 'r')as f:
+        vRawText = f.read()
+    
+    imsis = vPattern.findall(vRawText)
+
+    for imsi in imsis:
+        if imsi in vFinallyList and vDup:
+            pass
+        else:
+            vFinallyList.append(imsi)
+
+    for imsi in vFinallyList:
+        if vJump:
+            print('\n\n\n\n\n')
+        print(imsi)
+main()
